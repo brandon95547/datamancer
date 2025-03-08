@@ -33,8 +33,7 @@ npm install
 ## **📂 Project Structure**
 ```
 datamancer/
-│── src/                   # Core scraping logic
-│   ├── scrape.js          # Scraper script (uses environment variable for URL)
+│── scrape.js              # Scraper script (uses environment variable for URL)
 │── temp/                  # Scraped data storage
 │── package.json           # Node.js dependencies
 │── README.md              # Project documentation
