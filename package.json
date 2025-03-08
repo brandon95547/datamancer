@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "scrape": "cross-env TARGET_URL=\"https://example.com\" node scrape.js"
   },
   "author": "",
   "license": "ISC",
@@ -12,5 +13,8 @@
     "axios": "^1.8.2",
     "puppeteer": "^24.4.0",
     "purgecss": "^7.0.2"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }

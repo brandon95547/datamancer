@@ -21,6 +21,7 @@ debug.log
 output/
 scraped_data/
 data/
+temp/
 
 # Compiled files
 dist/

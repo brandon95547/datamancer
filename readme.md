@@ -36,7 +36,8 @@ datamancer/
 │── src/                   # Core scraping logic
 │   ├── index.js           # Main script
 │   ├── scraper.js         # Web scraper logic
-│   └── downloader.js      # Handles file downloads
+│   ├── downloader.js      # Handles file downloads
+│   ├── scrape.js          # Scraper script (uses environment variable for URL)
 │── output/                # Scraped data storage
 │── config/                # Configuration files
 │── package.json           # Node.js dependencies
@@ -47,9 +48,27 @@ datamancer/
 
 ## **🛠️ Usage**
 ### **1⃣ Basic Web Scraping**
-To start scraping a webpage, use the CLI:  
+To start scraping a webpage, set the URL via an environment variable and run:
+
 ```sh
-node src/index.js --url "https://example.com"
+cross-env TARGET_URL="https://example.com" node src/scrape.js
+```
+
+Alternatively, without `cross-env`:
+
+On macOS/Linux:
+```sh
+TARGET_URL="https://example.com" node src/scrape.js
+```
+
+On Windows (cmd):
+```cmd
+set TARGET_URL=https://example.com && node src/scrape.js
+```
+
+On Windows (PowerShell):
+```powershell
+$env:TARGET_URL="https://example.com"; node src/scrape.js
 ```
 
 ### **2⃣ Extract Specific Data**

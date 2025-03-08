@@ -4,9 +4,9 @@ const axios = require('axios');
 const puppeteer = require('puppeteer');
 
 (async () => {
-    const url = ''; // Target URL
-    const outputDir = 'downloaded_assets';
-    const outputHtmlFile = 'temp.html';
+    const url = process.env.TARGET_URL; // Read from environment variable
+    const outputDir = 'temp/scraped_data';
+    const outputHtmlFile = 'temp/temp.html';
 
     if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
 
@@ -19,12 +19,11 @@ const puppeteer = require('puppeteer');
 
     let content = await page.content();
 
-    // Extract asset URLs (both absolute and relative)
+    // Extract asset URLs (including all href attributes)
     const assetUrls = await page.evaluate((baseUrl) => {
         const urls = [];
-        document.querySelectorAll('img, link[rel="stylesheet"], script[src]').forEach(el => {
+        document.querySelectorAll('img, link[rel], script[src], a[href]').forEach(el => {
             let src = el.src || el.href;
-
             if (!src) return;
 
             // Handle protocol-relative URLs (e.g., //example.com/script.js)
@@ -38,7 +37,7 @@ const puppeteer = require('puppeteer');
             }
 
             // Ensure it's a valid URL
-            if (src && !src.startsWith('data:')) {
+            if (src && !src.startsWith('data:') && !src.startsWith('mailto:') && !src.startsWith('javascript:')) {
                 urls.push(src);
             }
         });
@@ -66,19 +65,19 @@ const puppeteer = require('puppeteer');
     // Download all assets in parallel
     await Promise.all(Object.entries(assetMap).map(([assetUrl, filename]) => downloadFile(assetUrl, filename)));
 
-    // Fix Relative Paths in HTML (Handling <script> tags properly)
-    content = content.replace(/(src|href)=["'](\/[^"']+)["']/g, (match, attr, relPath) => {
-        const fullUrl = new URL(relPath, url).href; // Convert to absolute URL
-        if (assetMap[fullUrl]) {
-            return `${attr}="downloaded_assets/${assetMap[fullUrl]}"`;
+    // Fix paths in HTML (including all href and src attributes)
+    content = content.replace(/(src|href)=\"([^\"]+)\"/g, (match, attr, originalUrl) => {
+        let fullUrl;
+        try {
+            fullUrl = new URL(originalUrl, url).href;
+        } catch {
+            return match; // Skip if not a valid URL
         }
-        return match; // If not found, return original
-    });
 
-    // Fix Absolute Paths in HTML
-    Object.entries(assetMap).forEach(([assetUrl, filename]) => {
-        const escapedUrl = assetUrl.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'); // Escape special characters
-        content = content.replace(new RegExp(escapedUrl, 'g'), `downloaded_assets/${filename}`);
+        if (assetMap[fullUrl]) {
+            return `${attr}="scraped_data/${assetMap[fullUrl]}"`;
+        }
+        return match;
     });
 
     fs.writeFileSync(outputHtmlFile, content, 'utf8');
