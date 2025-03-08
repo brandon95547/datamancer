@@ -34,12 +34,8 @@ npm install
 ```
 datamancer/
 │── src/                   # Core scraping logic
-│   ├── index.js           # Main script
-│   ├── scraper.js         # Web scraper logic
-│   ├── downloader.js      # Handles file downloads
 │   ├── scrape.js          # Scraper script (uses environment variable for URL)
-│── output/                # Scraped data storage
-│── config/                # Configuration files
+│── temp/                  # Scraped data storage
 │── package.json           # Node.js dependencies
 │── README.md              # Project documentation
 ```
@@ -51,24 +47,24 @@ datamancer/
 To start scraping a webpage, set the URL via an environment variable and run:
 
 ```sh
-cross-env TARGET_URL="https://example.com" node src/scrape.js
+cross-env TARGET_URL="https://example.com" node scrape.js
 ```
 
 Alternatively, without `cross-env`:
 
 On macOS/Linux:
 ```sh
-TARGET_URL="https://example.com" node src/scrape.js
+TARGET_URL="https://example.com" node scrape.js
 ```
 
 On Windows (cmd):
 ```cmd
-set TARGET_URL=https://example.com && node src/scrape.js
+set TARGET_URL=https://example.com && node scrape.js
 ```
 
 On Windows (PowerShell):
 ```powershell
-$env:TARGET_URL="https://example.com"; node src/scrape.js
+$env:TARGET_URL="https://example.com"; node scrape.js
 ```
 
 ### **2⃣ Extract Specific Data**

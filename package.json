@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "scrape": "cross-env TARGET_URL=\"https://example.com\" node scrape.js"
+    "scrape": "cross-env TARGET_URL=\"https://example.com/mypage\" node scrape.js"
   },
   "author": "",
   "license": "ISC",
